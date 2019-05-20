@@ -1,0 +1,7 @@
+<com.grishberg.asynclayout.AsyncWrapperLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/widgetsStub"
+	android:layout_width="fill_parent"
+	android:layout_height="150dp"
+	android:layout="@layout/widget_layout">
+</com.grishberg.asynclayout.AsyncWrapperLayout>
