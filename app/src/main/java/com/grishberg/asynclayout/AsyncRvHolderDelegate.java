@@ -12,7 +12,6 @@ public class AsyncRvHolderDelegate {
     private final PosToTypeAdapter typeAdapter;
     @IdRes
     private final int rvId;
-    //private final LayoutInflater inflater;
     private final DimensionProvider parentDimensions;
     private final DimensionProvider childDimensions;
     private Binder childBinder;

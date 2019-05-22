@@ -1,28 +1,32 @@
 package com.grishberg.rvmenu;
 
-import android.app.*;
-import android.os.*;
-import android.support.v7.widget.*;
+import android.app.Activity;
+import android.graphics.Rect;
+import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.TouchDelegate;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AbsListView.LayoutParams;
+import android.widget.Toast;
 
+import com.github.grishberg.consoleview.Logger;
+import com.github.grishberg.consoleview.LoggerImpl;
 import com.grishberg.asynclayout.Binder;
-import com.grishberg.rvmenu.rv.*;
-
-import android.view.*;
-
-import java.util.*;
-
-import android.graphics.*;
-import android.view.View.*;
-import android.widget.*;
-import android.widget.AbsListView.*;
-
-import com.grishberg.rvmenu.menu.*;
-import com.github.grishberg.consoleview.*;
-import com.grishberg.rvmenu.rv.widget.Widget;
+import com.grishberg.rvmenu.menu.BarVisibilityListener;
+import com.grishberg.rvmenu.menu.MenuVisibility;
+import com.grishberg.rvmenu.rv.ItemsAdapter;
+import com.grishberg.rvmenu.rv.ItemsRecyclerView;
 import com.grishberg.rvmenu.rv.widget.WidgetChildBinder;
 import com.grishberg.rvmenu.rv.widget.WidgetDimensions;
 import com.grishberg.rvmenu.rv.widget.WidgetIem;
 import com.grishberg.rvmenu.rv.widget.WidgetPosToTypeAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends Activity {
     private Rect touchHitRect = new Rect();
