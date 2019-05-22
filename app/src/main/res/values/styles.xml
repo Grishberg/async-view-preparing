@@ -4,7 +4,7 @@
 	</style>
 	<dimen name="topItemOffset">100dp</dimen>
 	<dimen name="widgetHeight">150dp</dimen>
-	<dimen name="childWidth">200dp</dimen>
+	<dimen name="childWidth">300dp</dimen>
 	<dimen name="childHeight">150dp</dimen>
 	
 </resources>
