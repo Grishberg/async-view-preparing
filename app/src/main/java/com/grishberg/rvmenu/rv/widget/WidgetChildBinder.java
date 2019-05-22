@@ -9,7 +9,7 @@ import com.grishberg.rvmenu.R;
 import java.util.List;
 import android.widget.*;
 
-public class WidgetChildBinder implements Binder {
+public class WidgetChildBinder implements Binder<WidgetChildVh> {
     private final List<WidgetIem> titles;
 
     public WidgetChildBinder(List<WidgetIem> titles) {

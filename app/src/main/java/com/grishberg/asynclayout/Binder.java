@@ -2,12 +2,10 @@ package com.grishberg.asynclayout;
 
 import android.view.View;
 
-import com.grishberg.rvmenu.rv.widget.WidgetChildVh;
-
-public interface Binder {
+public interface Binder<T> {
     void bind(int pos, View view);
 
-    void bind(int pos, WidgetChildVh vh);
+    void bind(int pos, T vh);
 
     int itemsCount();
 
@@ -18,7 +16,7 @@ public interface Binder {
         }
 
         @Override
-        public void bind(int pos, WidgetChildVh vh) {
+        public void bind(int pos, Object vh) {
             /* stub */
         }
 

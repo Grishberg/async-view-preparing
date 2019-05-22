@@ -9,17 +9,16 @@ import com.grishberg.asynclayout.PosToTypeAdapter;
 import com.grishberg.rvmenu.common.L;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class WidgetAdapter extends RecyclerView.Adapter<WidgetChildVh> {
     private static final String T = "WA";
     private ArrayList<View> viewCache = new ArrayList<>();
     private final PosToTypeAdapter posToTypeAdapter;
-    private final Binder binder;
+    private final Binder<WidgetChildVh> binder;
     private final L log;
 
     public WidgetAdapter(PosToTypeAdapter posToTypeAdapter,
-                         Binder binder, L l) {
+                         Binder<WidgetChildVh> binder, L l) {
         this.posToTypeAdapter = posToTypeAdapter;
         this.binder = binder;
         log = l;

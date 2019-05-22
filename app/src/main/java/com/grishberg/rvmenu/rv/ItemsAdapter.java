@@ -18,6 +18,7 @@ import com.grishberg.rvmenu.R;
 import com.grishberg.rvmenu.common.L;
 import com.grishberg.rvmenu.rv.widget.WidgetAdapter;
 import com.grishberg.rvmenu.rv.widget.WidgetChildDimension;
+import com.grishberg.rvmenu.rv.widget.WidgetChildVh;
 import com.grishberg.rvmenu.rv.widget.WidgetViewHolder;
 import com.grishberg.rvmenu.rv.widget.WidgetsChildProvider;
 import com.grishberg.rvmenu.rv.widget.WidgetsRootProvider;
@@ -44,7 +45,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
     public ItemsAdapter(Context c, LayoutInflater inflater,
                         DimensionProvider dimensionProvider,
                         PosToTypeAdapter widgetsPosToTypeAdapter,
-                        Binder widgetsBinder) {
+                        Binder<WidgetChildVh> widgetsBinder) {
         this.inflater = inflater;
         DimensionProvider widgetChildDimension = new WidgetChildDimension(c);
         FrameLayout inflateRoot = new FrameLayout(c);

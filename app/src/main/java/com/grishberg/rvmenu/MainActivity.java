@@ -21,6 +21,7 @@ import com.grishberg.rvmenu.menu.MenuVisibility;
 import com.grishberg.rvmenu.rv.ItemsAdapter;
 import com.grishberg.rvmenu.rv.ItemsRecyclerView;
 import com.grishberg.rvmenu.rv.widget.WidgetChildBinder;
+import com.grishberg.rvmenu.rv.widget.WidgetChildVh;
 import com.grishberg.rvmenu.rv.widget.WidgetDimensions;
 import com.grishberg.rvmenu.rv.widget.WidgetIem;
 import com.grishberg.rvmenu.rv.widget.WidgetPosToTypeAdapter;
@@ -50,7 +51,7 @@ public class MainActivity extends Activity {
         dp = new WidgetDimensions(this);
 
         rv.setDimensionProvider(dp);
-        Binder binder = new WidgetChildBinder(createWidgetData());
+        Binder<WidgetChildVh> binder = new WidgetChildBinder(createWidgetData());
 
         adapter = new ItemsAdapter(this, LayoutInflater.from(this),
                 dp, new WidgetPosToTypeAdapter(), binder);
