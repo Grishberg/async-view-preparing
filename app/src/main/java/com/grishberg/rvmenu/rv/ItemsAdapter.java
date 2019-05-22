@@ -41,7 +41,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
     private final AsyncRvHolderDelegate widgetsDelegate;
     private final WidgetAdapter widgetsAdapter;
 
-
     public ItemsAdapter(Context c, LayoutInflater inflater,
                         DimensionProvider dimensionProvider,
                         PosToTypeAdapter widgetsPosToTypeAdapter,

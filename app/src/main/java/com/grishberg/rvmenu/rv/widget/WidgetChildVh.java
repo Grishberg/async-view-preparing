@@ -3,6 +3,7 @@ package com.grishberg.rvmenu.rv.widget;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
 import com.grishberg.rvmenu.R;
 
 public class WidgetChildVh extends RecyclerView.ViewHolder {

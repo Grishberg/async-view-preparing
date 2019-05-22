@@ -1,11 +1,11 @@
 package com.grishberg.asynclayout;
 
-import android.os.*;
-import android.view.*;
-import android.view.View.*;
-import android.util.*;
+import android.os.AsyncTask;
+import android.util.Pair;
+import android.view.View;
+import android.view.View.MeasureSpec;
 
-import com.grishberg.rvmenu.common.*;
+import com.grishberg.rvmenu.common.L;
 
 public class PrepareTask extends AsyncTask<Void, Pair<Integer, View>, Void> {
     private final ViewProvider provider;
