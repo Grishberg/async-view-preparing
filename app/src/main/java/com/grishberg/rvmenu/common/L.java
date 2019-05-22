@@ -18,8 +18,8 @@ public class L {
     }
 
     public void d(String t, String m) {
-        Message msg = handler.obtainMessage(0, new Pair<>(t, m));
-        handler.sendMessage(msg);
+        //Message msg = handler.obtainMessage(0, new Pair<>(t, m));
+        //handler.sendMessage(msg);
     }
 
     private class LogHandler extends Handler {

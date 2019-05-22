@@ -95,9 +95,13 @@ public class MainActivity extends Activity {
 
     private List<WidgetIem> createWidgetData() {
         ArrayList<WidgetIem> items = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            items.add(new WidgetIem("Widget item " + i));
-        }
+        items.add(new WidgetIem("Widget item 1", 
+			"This is description for created in worker-thread for RecyclerView item. It created and measured in worker thread", R.drawable.ic_widget1));
+        items.add(new WidgetIem("Widget item 2", 
+			"I am on mobius, it's very interrsting meetup 2", R.drawable.ic_widget2));
+        items.add(new WidgetIem("Widget item 3", 
+			"I can help you with some problems with running espresso tests.", R.drawable.ic_widget3));
+        
         return items;
     }
 

@@ -13,7 +13,7 @@ public class WidgetChildVh extends RecyclerView.ViewHolder {
         title = v.findViewById(R.id.title);
     }
 
-    void bind(String text) {
-        title.setText(text);
+    void bind(WidgetIem item) {
+        title.setText(item.getTitle());
     }
 }
