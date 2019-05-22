@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.grishberg.asynclayout.AsyncRvHolderDelegate;
+import com.grishberg.asynclayout.Binder;
 import com.grishberg.asynclayout.DimensionProvider;
 import com.grishberg.asynclayout.PosToTypeAdapter;
 import com.grishberg.asynclayout.ViewProvider;
@@ -36,17 +37,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
     private final LayoutInflater inflater;
     private boolean initiated;
     private WidgetViewHolder widgets;
-    private final DimensionProvider dp;
     private final AsyncRvHolderDelegate widgetsDelegate;
     private final WidgetAdapter widgetsAdapter;
-    ArrayList<String> widgetItems;
+
 
     public ItemsAdapter(Context c, LayoutInflater inflater,
-                        DimensionProvider d,
-                        PosToTypeAdapter widgetsPosToTypeAdapter) {
+                        DimensionProvider dimensionProvider,
+                        PosToTypeAdapter widgetsPosToTypeAdapter,
+                        Binder widgetsBinder) {
         this.inflater = inflater;
-        dp = d;
-        DimensionProvider wd = new WidgetChildDimension(c);
+        DimensionProvider widgetChildDimension = new WidgetChildDimension(c);
         FrameLayout inflateRoot = new FrameLayout(c);
         ViewProvider widgetRootProvider = new WidgetsRootProvider(inflater, inflateRoot);
         ViewProvider childrenProvider = new WidgetsChildProvider(inflater, inflateRoot);
@@ -54,15 +54,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
                 childrenProvider,
                 widgetsPosToTypeAdapter,
                 R.id.widgetRv,
-                d,
-                wd,
+                dimensionProvider,
+                widgetChildDimension,
+                widgetsBinder,
                 log);
         widgetsDelegate.setListener(this);
-        widgetItems = new ArrayList<>();
-        widgetItems.add("one");
-        widgetItems.add("two");
-        widgetItems.add("three");
-        widgetsAdapter = new WidgetAdapter(widgetItems, widgetsPosToTypeAdapter, log);
+        widgetsAdapter = new WidgetAdapter(widgetsPosToTypeAdapter, widgetsBinder, log);
     }
 
     public void populate(List<Item> i) {
@@ -96,7 +93,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
         }
         log.d(T, "show widgets");
         initiated = true;
-        widgetsDelegate.prepareChildren(widgetItems.size());
+        widgetsDelegate.prepareChildren();
     }
 
     @Override
@@ -109,11 +106,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
 
     private MenuViewHolder createWidgetVH(ViewGroup parent) {
         int layout = R.layout.widget_layout;
-
         log.d(T, "create widget vh");
         View v = inflater.inflate(layout, parent, false);
         WidgetViewHolder vh = new WidgetViewHolder(v, widgetsAdapter, log);
-        vh.setIsRecyclable(false);
         widgets = vh;
         return vh;
     }

@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.grishberg.asynclayout.Binder;
 import com.grishberg.asynclayout.PosToTypeAdapter;
 import com.grishberg.rvmenu.common.L;
 
@@ -13,15 +14,14 @@ import java.util.List;
 public class WidgetAdapter extends RecyclerView.Adapter<WidgetChildVh> {
     private static final String T = "WA";
     private ArrayList<View> viewCache = new ArrayList<>();
-    private List<String> items;
     private final PosToTypeAdapter posToTypeAdapter;
+    private final Binder binder;
     private final L log;
 
-    public WidgetAdapter(List<String> items,
-                         PosToTypeAdapter posToTypeAdapter,
-                         L l) {
-        this.items = items;
+    public WidgetAdapter(PosToTypeAdapter posToTypeAdapter,
+                         Binder binder, L l) {
         this.posToTypeAdapter = posToTypeAdapter;
+        this.binder = binder;
         log = l;
     }
 
@@ -50,7 +50,7 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetChildVh> {
     @Override
     public void onBindViewHolder(WidgetChildVh vh, int pos) {
         log.d(T, "on bind pos=" + pos);
-        vh.bind(items.get(pos));
+        binder.bind(pos, vh);
     }
 
     @Override
