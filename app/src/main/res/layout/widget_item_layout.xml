@@ -9,13 +9,32 @@
     android:orientation="horizontal"
     >
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
+	<ImageView
+		android:id="@+id/icon"
+		android:layout_width="48dp"
+        android:layout_height="48dp"
+		/>
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        tools:text="test title"/>
-
+		android:layout_gravity="right"
+		>
+    	<TextView
+        	android:id="@+id/title"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+       	 	android:textAlignment="center"
+        	tools:text="test title"/>
+		
+		<TextView
+			android:id="@+id/description"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAlignment="center"
+			tools:text="test description"/>
+		
+	</LinearLayout>
 
 </com.grishberg.rvmenu.view.CustomConstraintLayout>
 
