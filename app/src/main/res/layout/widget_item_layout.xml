@@ -1,40 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.grishberg.rvmenu.view.CustomConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4ff0f0"
     android:gravity="center"
     android:orientation="horizontal"
     >
 
-	<ImageView
-		android:id="@+id/icon"
-		android:layout_width="48dp"
-        android:layout_height="48dp"
-		/>
-	<LinearLayout
-		android:orientation="vertical"
-		android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:layout_gravity="right"
-		>
-    	<TextView
-        	android:id="@+id/title"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-       	 	android:textAlignment="center"
-        	tools:text="test title"/>
-		
-		<TextView
-			android:id="@+id/description"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAlignment="center"
-			tools:text="test description"/>
-		
-	</LinearLayout>
+	<android.support.v7.widget.CardView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:cardCornerRadius="10dp"
+		android:elevation="4dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/description"
+                app:layout_constraintHorizontal_bias="0"
+
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
+                app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="test title"/>
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintTop_toBottomOf="@+id/title"
+                tools:text="test description 234234 234 23423 423 423 2523 5 manu many text in description"/>
+
+        </android.support.constraint.ConstraintLayout>
+	</android.support.v7.widget.CardView>
 
 </com.grishberg.rvmenu.view.CustomConstraintLayout>
 

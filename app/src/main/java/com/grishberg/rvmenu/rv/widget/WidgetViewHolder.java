@@ -1,5 +1,6 @@
 package com.grishberg.rvmenu.rv.widget;
 
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -39,6 +40,9 @@ public class WidgetViewHolder extends MenuViewHolder implements Widget {
             rv.setLayoutManager(new LinearLayoutManager(rv.getContext(),
                     RecyclerView.HORIZONTAL, false));
         }
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(rv.getContext(), RecyclerView.HORIZONTAL);
+        rv.addItemDecoration(itemDecoration);
+
         adapter.addViewForPos(0, firstItem);
     }
 
