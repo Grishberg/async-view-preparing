@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.grishberg.asynclayout.AsyncRvHolderDelegate;
+import com.grishberg.asynclayout.AsyncViewRepository;
 import com.grishberg.asynclayout.Binder;
 import com.grishberg.asynclayout.DimensionProvider;
 import com.grishberg.asynclayout.PosToTypeAdapter;
@@ -40,12 +41,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
     private WidgetViewHolder widgets;
     private final AsyncRvHolderDelegate widgetsDelegate;
     private final WidgetAdapter widgetsAdapter;
+    private final AsyncViewRepository asyncViewRepository;
 
     public ItemsAdapter(Context c, LayoutInflater inflater,
                         DimensionProvider dimensionProvider,
                         PosToTypeAdapter widgetsPosToTypeAdapter,
-                        Binder<WidgetChildVh> widgetsBinder) {
+                        Binder<WidgetChildVh> widgetsBinder,
+                        AsyncViewRepository asyncViewRepository) {
         this.inflater = inflater;
+        this.asyncViewRepository = asyncViewRepository;
         DimensionProvider widgetChildDimension = new WidgetChildDimension(c);
         FrameLayout inflateRoot = new FrameLayout(c);
         ViewProvider widgetRootProvider = new WidgetsRootProvider(inflater, inflateRoot);
@@ -53,13 +57,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
         widgetsDelegate = new AsyncRvHolderDelegate(widgetRootProvider,
                 childrenProvider,
                 widgetsPosToTypeAdapter,
-                R.id.widgetRv,
                 dimensionProvider,
                 widgetChildDimension,
                 widgetsBinder,
                 log);
         widgetsDelegate.setListener(this);
         widgetsAdapter = new WidgetAdapter(widgetsPosToTypeAdapter, widgetsBinder, log);
+        asyncViewRepository.registerRvIdForType(TYPE_WIDGETS, R.id.widgetRv);
     }
 
     public void populate(List<Item> i) {
@@ -98,10 +102,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
 
     @Override
     public MenuViewHolder onCreateViewHolder(ViewGroup parent, int type) {
+        MenuViewHolder vh;
         if (type == TYPE_WIDGETS) {
-            return createWidgetVH(parent);
+            vh = createWidgetVH(parent);
+        } else {
+            vh = createItemVh(parent);
         }
-        return createItemVh(parent);
+        asyncViewRepository.onCreateViewHolder(type, vh.itemView);
+        return vh;
     }
 
     private MenuViewHolder createWidgetVH(ViewGroup parent) {

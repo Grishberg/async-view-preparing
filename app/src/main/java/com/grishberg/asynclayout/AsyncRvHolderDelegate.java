@@ -1,6 +1,5 @@
 package com.grishberg.asynclayout;
 
-import android.support.annotation.IdRes;
 import android.view.View;
 
 import com.grishberg.rvmenu.common.L;
@@ -10,8 +9,6 @@ public class AsyncRvHolderDelegate {
     private final ViewProvider parentProvider;
     private final ViewProvider childProvider;
     private final PosToTypeAdapter typeAdapter;
-    @IdRes
-    private final int rvId;
     private final DimensionProvider parentDimensions;
     private final DimensionProvider childDimensions;
     private Binder childBinder;
@@ -25,7 +22,6 @@ public class AsyncRvHolderDelegate {
             ViewProvider parentProvider,
             ViewProvider childProvider,
             PosToTypeAdapter typeAdapter,
-            int rvId,
             DimensionProvider parentDimensions,
             DimensionProvider childDimensions,
             Binder childBinder,
@@ -33,8 +29,6 @@ public class AsyncRvHolderDelegate {
         this.parentProvider = parentProvider;
         this.childProvider = childProvider;
         this.typeAdapter = typeAdapter;
-        this.rvId = rvId;
-        //this.inflater = inflater;
         this.parentDimensions = parentDimensions;
         this.childDimensions = childDimensions;
         this.childBinder = childBinder;

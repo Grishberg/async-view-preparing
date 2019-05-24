@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.github.grishberg.consoleview.Logger;
 import com.github.grishberg.consoleview.LoggerImpl;
+import com.grishberg.asynclayout.AsyncViewRepository;
 import com.grishberg.asynclayout.Binder;
 import com.grishberg.rvmenu.menu.BarVisibilityListener;
 import com.grishberg.rvmenu.menu.MenuVisibility;
@@ -35,7 +36,7 @@ public class MainActivity extends Activity {
     private Logger log;
     private ItemsAdapter adapter;
     private ItemsRecyclerView rv;
-    private WidgetDimensions dp;
+    private WidgetDimensions widgetDimensions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +49,19 @@ public class MainActivity extends Activity {
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         container.addView(rv, 0);
 
-        dp = new WidgetDimensions(this);
+        widgetDimensions = new WidgetDimensions(this);
 
-        rv.setDimensionProvider(dp);
+        rv.setDimensionProvider(widgetDimensions);
         Binder<WidgetChildVh> binder = new WidgetChildBinder(createWidgetData());
 
-        adapter = new ItemsAdapter(this, LayoutInflater.from(this),
-                dp, new WidgetPosToTypeAdapter(), binder);
+        AsyncViewRepository asyncViewRepository = new AsyncViewRepository();
+
+        adapter = new ItemsAdapter(this,
+                LayoutInflater.from(this),
+                widgetDimensions,
+                new WidgetPosToTypeAdapter(),
+                binder,
+                asyncViewRepository);
         rv.addItemDecoration(new DividerItemDecoration(this, RecyclerView.VERTICAL));
         rv.setAdapter(adapter);
         adapter.populate(createData());
@@ -70,7 +77,7 @@ public class MainActivity extends Activity {
                 Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_SHORT).show();
             }
         });
-        rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 touchHitRect.offset(dx, dy);

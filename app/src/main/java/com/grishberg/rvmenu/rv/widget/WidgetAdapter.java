@@ -1,49 +1,28 @@
 package com.grishberg.rvmenu.rv.widget;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.grishberg.asynclayout.Binder;
+import com.grishberg.asynclayout.ChildAdapter;
 import com.grishberg.asynclayout.PosToTypeAdapter;
 import com.grishberg.rvmenu.common.L;
 
-import java.util.ArrayList;
 
-public class WidgetAdapter extends RecyclerView.Adapter<WidgetChildVh> {
+public class WidgetAdapter extends ChildAdapter<WidgetChildVh> {
     private static final String T = "WA";
-    private ArrayList<View> viewCache = new ArrayList<>();
-    private final PosToTypeAdapter posToTypeAdapter;
     private final Binder<WidgetChildVh> binder;
     private final L log;
 
     public WidgetAdapter(PosToTypeAdapter posToTypeAdapter,
                          Binder<WidgetChildVh> binder, L l) {
-        this.posToTypeAdapter = posToTypeAdapter;
+        super(posToTypeAdapter);
         this.binder = binder;
         log = l;
     }
 
-    void addViewForPos(int pos, View v) {
-        viewCache.add(v);
-        log.d(T, "add view for pos=" + pos);
-        if (pos == 0) {
-            notifyDataSetChanged();
-
-            return;
-        }
-        notifyItemInserted(pos);
-    }
-
     @Override
-    public int getItemViewType(int position) {
-        return posToTypeAdapter.typeByPos(position);
-    }
-
-    @Override
-    public WidgetChildVh onCreateViewHolder(ViewGroup parent, int type) {
-        log.d(T, "on create type=" + type);
-        return new WidgetChildVh(viewCache.get(type));
+    protected WidgetChildVh onCreateViewHolder(View view) {
+        return new WidgetChildVh(view);
     }
 
     @Override
@@ -52,9 +31,4 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetChildVh> {
         binder.bind(pos, vh);
     }
 
-    @Override
-    public int getItemCount() {
-        log.d(T, "count = " + viewCache.size());
-        return viewCache.size();
-    }
 }
