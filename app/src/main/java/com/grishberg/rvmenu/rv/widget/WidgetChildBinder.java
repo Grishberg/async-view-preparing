@@ -1,13 +1,13 @@
 package com.grishberg.rvmenu.rv.widget;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.grishberg.asynclayout.Binder;
 import com.grishberg.rvmenu.R;
 
 import java.util.List;
-import android.widget.*;
 
 public class WidgetChildBinder implements Binder<WidgetChildVh> {
     private final List<WidgetIem> titles;
@@ -20,11 +20,11 @@ public class WidgetChildBinder implements Binder<WidgetChildVh> {
     public void bind(int pos, View view) {
         TextView title = view.findViewById(R.id.title);
         title.setText(titles.get(pos).getTitle());
-		TextView descr = view.findViewById(R.id.description);
+        TextView descr = view.findViewById(R.id.description);
         descr.setText(titles.get(pos).getDescription());
-		
-		ImageView icon = view.findViewById(R.id.icon);
-		icon.setImageResource(titles.get(pos).getIconRes());
+
+        ImageView icon = view.findViewById(R.id.icon);
+        icon.setImageResource(titles.get(pos).getIconRes());
     }
 
     @Override

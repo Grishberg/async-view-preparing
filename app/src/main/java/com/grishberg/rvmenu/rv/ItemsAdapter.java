@@ -6,12 +6,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.grishberg.asynclayout.AsyncRvHolderDelegate;
-import com.grishberg.asynclayout.AsyncViewRepository;
+import com.grishberg.asynclayout.AsyncRvDelegate;
 import com.grishberg.asynclayout.Binder;
 import com.grishberg.asynclayout.ChildAdapter;
 import com.grishberg.asynclayout.DimensionProvider;
@@ -41,13 +40,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
     private final ArrayList<Item> items = new ArrayList<>();
     private final LayoutInflater inflater;
     private boolean initiated;
-    private final AsyncViewRepository asyncViewRepository;
+    private final AsyncRvDelegate asyncViewRepository;
 
     public ItemsAdapter(Context c, LayoutInflater inflater,
                         DimensionProvider dimensionProvider,
                         final PosToTypeAdapter widgetsPosToTypeAdapter,
                         final Binder<WidgetChildVh> widgetsBinder,
-                        AsyncViewRepository asyncViewRepository) {
+                        AsyncRvDelegate asyncViewRepository) {
         this.inflater = inflater;
         this.asyncViewRepository = asyncViewRepository;
         DimensionProvider widgetChildDimension = new WidgetChildDimension(c);
@@ -70,7 +69,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
                     }
                 },
                 false);
-        asyncViewRepository.setRvInitializer(new AsyncViewRepository.RvInitializer() {
+        asyncViewRepository.setRvInitializer(new AsyncRvDelegate.RvInitializer() {
             @Override
             public void onInitChildRecyclerView(int type, RecyclerView rv) {
                 if (type == TYPE_WIDGETS) {
@@ -116,8 +115,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
         asyncViewRepository.prepareAsync(TYPE_WIDGETS);
     }
 
+    @NonNull
     @Override
-    public MenuViewHolder onCreateViewHolder(ViewGroup parent, int type) {
+    public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int type) {
         MenuViewHolder vh;
         if (type == TYPE_WIDGETS) {
             vh = createWidgetVH(parent);
@@ -129,14 +129,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
     }
 
     private MenuViewHolder createWidgetVH(ViewGroup parent) {
-        int layout = R.layout.widget_layout;
         log.d(T, "create widget vh");
-        return new WidgetViewHolder(inflater.inflate(layout, parent, false), log);
+        return new WidgetViewHolder(inflater.inflate(R.layout.widget_layout, parent, false), log);
     }
 
     private MenuViewHolder createItemVh(ViewGroup parent) {
-        View v = inflater.inflate(R.layout.item_layout, parent, false);
-        return new ItemViewHolder(v);
+        return new ItemViewHolder(inflater.inflate(R.layout.item_layout, parent, false));
     }
 
     @Override

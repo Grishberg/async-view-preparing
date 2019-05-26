@@ -10,7 +10,7 @@ import com.grishberg.rvmenu.R;
 import com.grishberg.rvmenu.common.L;
 import com.grishberg.rvmenu.rv.MenuViewHolder;
 
-public class WidgetViewHolder extends MenuViewHolder implements Widget {
+public class WidgetViewHolder extends MenuViewHolder{
 
     private static final String T = "WVH";
     private final RecyclerView rv;
@@ -25,14 +25,5 @@ public class WidgetViewHolder extends MenuViewHolder implements Widget {
     @Override
     public void bind(Item i) {
         // TODO: Implement this method
-    }
-
-    @Override
-    public void initWidgets(View firstItem) {
-        log.d(T, "init widgets");
-    }
-
-    @Override
-    public void addWidget(int pos, View v) {
     }
 }

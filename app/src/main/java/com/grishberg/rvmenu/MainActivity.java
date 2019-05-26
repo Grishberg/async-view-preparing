@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.github.grishberg.consoleview.Logger;
 import com.github.grishberg.consoleview.LoggerImpl;
-import com.grishberg.asynclayout.AsyncViewRepository;
+import com.grishberg.asynclayout.AsyncRvDelegate;
 import com.grishberg.asynclayout.Binder;
 import com.grishberg.rvmenu.menu.BarVisibilityListener;
 import com.grishberg.rvmenu.menu.MenuVisibility;
@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
     private ItemsAdapter adapter;
     private ItemsRecyclerView rv;
     private WidgetDimensions widgetDimensions;
+    private AsyncRvDelegate asyncRvDelegate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +55,14 @@ public class MainActivity extends Activity {
         rv.setDimensionProvider(widgetDimensions);
         Binder<WidgetChildVh> binder = new WidgetChildBinder(createWidgetData());
 
-        AsyncViewRepository asyncViewRepository = new AsyncViewRepository();
+        asyncRvDelegate = new AsyncRvDelegate();
 
         adapter = new ItemsAdapter(this,
                 LayoutInflater.from(this),
                 widgetDimensions,
                 new WidgetPosToTypeAdapter(),
                 binder,
-                asyncViewRepository);
+                asyncRvDelegate);
         rv.addItemDecoration(new DividerItemDecoration(this, RecyclerView.VERTICAL));
         rv.setAdapter(adapter);
         adapter.populate(createData());
@@ -103,14 +104,20 @@ public class MainActivity extends Activity {
 
     private List<WidgetIem> createWidgetData() {
         ArrayList<WidgetIem> items = new ArrayList<>();
-        items.add(new WidgetIem("Widget item 1", 
-			"This is description for created in worker-thread for RecyclerView item. It created and measured in worker thread", R.drawable.ic_widget1));
-        items.add(new WidgetIem("Widget item 2", 
-			"I am on mobius, it's very interrsting meetup 2", R.drawable.ic_widget2));
-        items.add(new WidgetIem("Widget item 3", 
-			"I can help you with some problems with running espresso tests.", R.drawable.ic_widget3));
-        
+        items.add(new WidgetIem("Widget item 1",
+                "This is description for created in worker-thread for RecyclerView item. It created and measured in worker thread", R.drawable.ic_widget1));
+        items.add(new WidgetIem("Widget item 2",
+                "I am on mobius, it's very interrsting meetup 2", R.drawable.ic_widget2));
+        items.add(new WidgetIem("Widget item 3",
+                "I can help you with some problems with running espresso tests.", R.drawable.ic_widget3));
+
         return items;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        asyncRvDelegate.clean();
     }
 
     private class BarVisibility implements BarVisibilityListener {

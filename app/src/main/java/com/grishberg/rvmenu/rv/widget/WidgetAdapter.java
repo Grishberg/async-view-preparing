@@ -7,7 +7,6 @@ import com.grishberg.asynclayout.ChildAdapter;
 import com.grishberg.asynclayout.PosToTypeAdapter;
 import com.grishberg.rvmenu.common.L;
 
-
 public class WidgetAdapter extends ChildAdapter<WidgetChildVh> {
     private static final String T = "WA";
     private final Binder<WidgetChildVh> binder;
@@ -30,5 +29,4 @@ public class WidgetAdapter extends ChildAdapter<WidgetChildVh> {
         log.d(T, "on bind pos=" + pos);
         binder.bind(pos, vh);
     }
-
 }

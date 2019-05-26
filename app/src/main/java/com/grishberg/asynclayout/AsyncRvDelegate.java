@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
 
-public class AsyncViewRepository {
+/**
+ * Manages creation of child view in worker thread.
+ */
+public class AsyncRvDelegate {
     private final SparseArray<RvScopeContainer> rvScopeContainers = new SparseArray<>();
     private RvInitializer rvInitializer = RvInitializer.STUB;
 
@@ -27,10 +30,16 @@ public class AsyncViewRepository {
                         initOnViewCreated));
     }
 
+    /**
+     * Sets listener for view prepared event.
+     */
     public void setRvInitializer(RvInitializer rvInitializer) {
         this.rvInitializer = rvInitializer;
     }
 
+    /**
+     * Is called when onCreateViewHolder is invoked in parent RV adapter.
+     */
     public void onCreateViewHolder(int type, View itemView) {
         RvScopeContainer scope = rvScopeContainers.get(type);
         if (scope == null) {
@@ -46,6 +55,9 @@ public class AsyncViewRepository {
         }
     }
 
+    /**
+     * Is called when activity destroyed.
+     */
     public void clean() {
         rvScopeContainers.clear();
     }
@@ -91,6 +103,9 @@ public class AsyncViewRepository {
         }
     }
 
+    /**
+     * Helper class for items with RV.
+     */
     private static class RvScopeContainer {
         @IdRes
         final int rvIdRes;
@@ -110,7 +125,16 @@ public class AsyncViewRepository {
         }
     }
 
+    /**
+     * Listener for child view created event.
+     */
     public interface RvInitializer {
+        /**
+         * Is called when need to init child recycler view with LayoutManager and decoration.
+         *
+         * @param type type of child item in parent RV.
+         * @param rv   child RV.
+         */
         void onInitChildRecyclerView(int type, RecyclerView rv);
 
         RvInitializer STUB = new RvInitializer() {

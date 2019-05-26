@@ -35,6 +35,11 @@ public class AsyncRvHolderDelegate {
         this.log = log;
     }
 
+    /**
+     * Sets listener for view prepared event.
+     *
+     * @param listener
+     */
     public void setListener(RvItemPrepareListener listener) {
         this.listener = listener;
     }
@@ -49,6 +54,9 @@ public class AsyncRvHolderDelegate {
         parentPrepareTask.execute();
     }
 
+    /**
+     * Start preparing child view.
+     */
     public void prepareChildren() {
         log.d(T, "start prepare children");
         childrenPrepareTask = new PrepareTask(
