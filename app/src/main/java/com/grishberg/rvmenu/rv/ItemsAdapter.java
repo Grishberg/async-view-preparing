@@ -2,6 +2,8 @@ package com.grishberg.rvmenu.rv;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +13,14 @@ import android.widget.FrameLayout;
 import com.grishberg.asynclayout.AsyncRvHolderDelegate;
 import com.grishberg.asynclayout.AsyncViewRepository;
 import com.grishberg.asynclayout.Binder;
+import com.grishberg.asynclayout.ChildAdapter;
 import com.grishberg.asynclayout.DimensionProvider;
 import com.grishberg.asynclayout.PosToTypeAdapter;
 import com.grishberg.asynclayout.ViewProvider;
 import com.grishberg.rvmenu.Item;
 import com.grishberg.rvmenu.R;
 import com.grishberg.rvmenu.common.L;
+import com.grishberg.rvmenu.common.LazyProvider;
 import com.grishberg.rvmenu.rv.widget.WidgetAdapter;
 import com.grishberg.rvmenu.rv.widget.WidgetChildDimension;
 import com.grishberg.rvmenu.rv.widget.WidgetChildVh;
@@ -27,8 +31,7 @@ import com.grishberg.rvmenu.rv.widget.WidgetsRootProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
-        implements AsyncRvHolderDelegate.RvItemPrepareListener {
+public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
     private static final String T = "[adapter]";
 
     private static final int TYPE_WIDGETS = 0;
@@ -39,14 +42,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
     private final LayoutInflater inflater;
     private boolean initiated;
     private WidgetViewHolder widgets;
-    private final AsyncRvHolderDelegate widgetsDelegate;
-    private final WidgetAdapter widgetsAdapter;
     private final AsyncViewRepository asyncViewRepository;
 
     public ItemsAdapter(Context c, LayoutInflater inflater,
                         DimensionProvider dimensionProvider,
-                        PosToTypeAdapter widgetsPosToTypeAdapter,
-                        Binder<WidgetChildVh> widgetsBinder,
+                        final PosToTypeAdapter widgetsPosToTypeAdapter,
+                        final Binder<WidgetChildVh> widgetsBinder,
                         AsyncViewRepository asyncViewRepository) {
         this.inflater = inflater;
         this.asyncViewRepository = asyncViewRepository;
@@ -54,16 +55,32 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
         FrameLayout inflateRoot = new FrameLayout(c);
         ViewProvider widgetRootProvider = new WidgetsRootProvider(inflater, inflateRoot);
         ViewProvider childrenProvider = new WidgetsChildProvider(inflater, inflateRoot);
-        widgetsDelegate = new AsyncRvHolderDelegate(widgetRootProvider,
+        AsyncRvHolderDelegate widgetsDelegate = new AsyncRvHolderDelegate(widgetRootProvider,
                 childrenProvider,
                 widgetsPosToTypeAdapter,
                 dimensionProvider,
                 widgetChildDimension,
                 widgetsBinder,
                 log);
-        widgetsDelegate.setListener(this);
-        widgetsAdapter = new WidgetAdapter(widgetsPosToTypeAdapter, widgetsBinder, log);
-        asyncViewRepository.registerRvIdForType(TYPE_WIDGETS, R.id.widgetRv);
+
+        asyncViewRepository.registerRvIdForType(TYPE_WIDGETS, R.id.widgetRv, widgetsDelegate,
+                new LazyProvider<ChildAdapter>() {
+                    @Override
+                    protected ChildAdapter create() {
+                        return new WidgetAdapter(widgetsPosToTypeAdapter, widgetsBinder, log);
+                    }
+                },
+                false);
+        asyncViewRepository.setRvInitializer(new AsyncViewRepository.RvInitializer() {
+            @Override
+            public void onInitChildRecyclerView(int type, RecyclerView rv) {
+                if (type == TYPE_WIDGETS) {
+                    rv.setLayoutManager(new LinearLayoutManager(rv.getContext(), RecyclerView.HORIZONTAL, false));
+                    DividerItemDecoration itemDecoration = new DividerItemDecoration(rv.getContext(), RecyclerView.HORIZONTAL);
+                    rv.addItemDecoration(itemDecoration);
+                }
+            }
+        });
     }
 
     public void populate(List<Item> i) {
@@ -92,12 +109,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
     }
 
     public void showWidget() {
-        if (initiated || widgets == null) {
+        if (initiated) {
             return;
         }
-        log.d(T, "show widgets");
         initiated = true;
-        widgetsDelegate.prepareChildren();
+        log.d(T, "show widgets");
+        asyncViewRepository.prepareAsync(TYPE_WIDGETS);
     }
 
     @Override
@@ -115,10 +132,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
     private MenuViewHolder createWidgetVH(ViewGroup parent) {
         int layout = R.layout.widget_layout;
         log.d(T, "create widget vh");
-        View v = inflater.inflate(layout, parent, false);
-        WidgetViewHolder vh = new WidgetViewHolder(v, widgetsAdapter, log);
-        widgets = vh;
-        return vh;
+        return new WidgetViewHolder(inflater.inflate(layout, parent, false), log);
     }
 
     private MenuViewHolder createItemVh(ViewGroup parent) {
@@ -129,24 +143,5 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder>
     @Override
     public void onBindViewHolder(MenuViewHolder vh, int pos) {
         vh.bind(items.get(pos));
-    }
-
-    @Override
-    public void onRootItemPrepared(View v) {
-        // TODO: replace stub with widget view.
-    }
-
-    @Override
-    public void onChildPrepared(int pos, View v) {
-        log.d(T, "onChildPrepared p=" + pos);
-        widgets.addWidget(pos, v);
-    }
-
-    @Override
-    public void onInitChildRv(View firstView) {
-        // create widgets adapter and set to  widgets rv
-        log.d(T, "onInitChildRv v=" + firstView);
-
-        widgets.initWidgets(firstView);
     }
 }

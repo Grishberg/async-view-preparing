@@ -14,13 +14,11 @@ public class WidgetViewHolder extends MenuViewHolder implements Widget {
 
     private static final String T = "WVH";
     private final RecyclerView rv;
-    private final WidgetAdapter adapter;
     private final L log;
 
-    public WidgetViewHolder(View v, WidgetAdapter a, L l) {
+    public WidgetViewHolder(View v, L l) {
         super(v);
         rv = v.findViewById(R.id.widgetRv);
-        adapter = a;
         log = l;
     }
 
@@ -32,22 +30,9 @@ public class WidgetViewHolder extends MenuViewHolder implements Widget {
     @Override
     public void initWidgets(View firstItem) {
         log.d(T, "init widgets");
-        rv.setVisibility(View.VISIBLE);
-        if (rv.getAdapter() == null) {
-            rv.setAdapter(adapter);
-        }
-        if (rv.getLayoutManager() == null) {
-            rv.setLayoutManager(new LinearLayoutManager(rv.getContext(),
-                    RecyclerView.HORIZONTAL, false));
-        }
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(rv.getContext(), RecyclerView.HORIZONTAL);
-        rv.addItemDecoration(itemDecoration);
-
-        adapter.addViewForPos(0, firstItem);
     }
 
     @Override
     public void addWidget(int pos, View v) {
-        adapter.addViewForPos(pos, v);
     }
 }
