@@ -41,7 +41,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
     private final ArrayList<Item> items = new ArrayList<>();
     private final LayoutInflater inflater;
     private boolean initiated;
-    private WidgetViewHolder widgets;
     private final AsyncViewRepository asyncViewRepository;
 
     public ItemsAdapter(Context c, LayoutInflater inflater,
