@@ -2,14 +2,14 @@ package com.grishberg.asynclayout;
 
 import android.view.View;
 
-public interface Binder<T> {
+public interface VhBinder<T> {
     void bind(int pos, View view);
 
     void bind(int pos, T vh);
 
     int itemsCount();
 
-    Binder STUB = new Binder() {
+    VhBinder STUB = new VhBinder() {
         @Override
         public void bind(int pos, View view) {
             /* stub */

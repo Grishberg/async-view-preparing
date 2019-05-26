@@ -2,17 +2,12 @@ package com.grishberg.asynclayout;
 
 import android.view.View;
 
-import com.grishberg.rvmenu.common.L;
-
 public class AsyncRvHolderDelegate {
-    private static final String T = "[AsyncDelegate]";
     private final ViewProvider parentProvider;
     private final ViewProvider childProvider;
-    private final PosToTypeAdapter typeAdapter;
     private final DimensionProvider parentDimensions;
     private final DimensionProvider childDimensions;
-    private Binder childBinder;
-    private final L log;
+    private VhBinder childBinder;
     private PrepareTask parentPrepareTask;
     private PrepareTask childrenPrepareTask;
     private RvItemPrepareListener listener = RvItemPrepareListener.STUB;
@@ -21,18 +16,14 @@ public class AsyncRvHolderDelegate {
     public AsyncRvHolderDelegate(
             ViewProvider parentProvider,
             ViewProvider childProvider,
-            PosToTypeAdapter typeAdapter,
             DimensionProvider parentDimensions,
             DimensionProvider childDimensions,
-            Binder childBinder,
-            L log) {
+            VhBinder childBinder) {
         this.parentProvider = parentProvider;
         this.childProvider = childProvider;
-        this.typeAdapter = typeAdapter;
         this.parentDimensions = parentDimensions;
         this.childDimensions = childDimensions;
         this.childBinder = childBinder;
-        this.log = log;
     }
 
     /**
@@ -40,31 +31,30 @@ public class AsyncRvHolderDelegate {
      *
      * @param listener
      */
-    public void setListener(RvItemPrepareListener listener) {
+    void setListener(RvItemPrepareListener listener) {
         this.listener = listener;
     }
 
-    public void prepareAsync() {
+    void prepareAsync() {
         parentPrepareTask = new PrepareTask(
                 parentProvider,
                 parentDimensions,
-                Binder.STUB,
+                VhBinder.STUB,
                 new ParentPrepareListener(),
-                1, 0, log);
+                1, 0);
         parentPrepareTask.execute();
     }
 
     /**
      * Start preparing child view.
      */
-    public void prepareChildren() {
-        log.d(T, "start prepare children");
+    void prepareChildren() {
         childrenPrepareTask = new PrepareTask(
                 childProvider,
                 childDimensions,
                 childBinder,
                 new ChildrenPrepareListener(),
-                childBinder.itemsCount(), 0, log
+                childBinder.itemsCount(), 0
         );
         childrenPrepareTask.execute();
     }
@@ -74,7 +64,6 @@ public class AsyncRvHolderDelegate {
         @Override
         public void onViewPrepared(int pos, View v) {
             // on parent prepared
-            log.d(T, "on parent prepared");
             listener.onRootItemPrepared(v);
         }
     }
@@ -83,7 +72,6 @@ public class AsyncRvHolderDelegate {
 
         @Override
         public void onViewPrepared(int pos, View v) {
-            log.d(T, "on view prepared pos=" + pos);
             // on child prepared
             if (!firstChildPrepared) {
                 listener.onInitChildRv(v);
@@ -94,7 +82,7 @@ public class AsyncRvHolderDelegate {
         }
     }
 
-    public interface RvItemPrepareListener {
+    interface RvItemPrepareListener {
         void onRootItemPrepared(View v);
 
         void onInitChildRv(View firstView);

@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.github.grishberg.consoleview.Logger;
 import com.github.grishberg.consoleview.LoggerImpl;
 import com.grishberg.asynclayout.AsyncRvDelegate;
-import com.grishberg.asynclayout.Binder;
+import com.grishberg.asynclayout.VhBinder;
 import com.grishberg.rvmenu.menu.BarVisibilityListener;
 import com.grishberg.rvmenu.menu.MenuVisibility;
 import com.grishberg.rvmenu.rv.ItemsAdapter;
@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
         widgetDimensions = new WidgetDimensions(this);
 
         rv.setDimensionProvider(widgetDimensions);
-        Binder<WidgetChildVh> binder = new WidgetChildBinder(createWidgetData());
+        VhBinder<WidgetChildVh> binder = new WidgetChildBinder(createWidgetData());
 
         asyncRvDelegate = new AsyncRvDelegate();
 

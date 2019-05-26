@@ -3,6 +3,7 @@ package com.grishberg.rvmenu.rv.widget;
 import android.content.Context;
 
 import com.grishberg.asynclayout.DimensionProvider;
+import com.grishberg.rvmenu.R;
 
 /**
  * Dimensions for widgets children.

@@ -4,12 +4,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.grishberg.asynclayout.Binder;
+import com.grishberg.asynclayout.VhBinder;
 import com.grishberg.rvmenu.R;
 
 import java.util.List;
 
-public class WidgetChildBinder implements Binder<WidgetChildVh> {
+public class WidgetChildBinder implements VhBinder<WidgetChildVh> {
     private final List<WidgetIem> titles;
 
     public WidgetChildBinder(List<WidgetIem> titles) {

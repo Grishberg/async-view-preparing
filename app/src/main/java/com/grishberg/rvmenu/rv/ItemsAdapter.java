@@ -9,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.grishberg.asynclayout.AsyncRvHolderDelegate;
 import com.grishberg.asynclayout.AsyncRvDelegate;
-import com.grishberg.asynclayout.Binder;
+import com.grishberg.asynclayout.AsyncRvHolderDelegate;
 import com.grishberg.asynclayout.ChildAdapter;
 import com.grishberg.asynclayout.DimensionProvider;
 import com.grishberg.asynclayout.PosToTypeAdapter;
+import com.grishberg.asynclayout.VhBinder;
 import com.grishberg.asynclayout.ViewProvider;
 import com.grishberg.rvmenu.Item;
 import com.grishberg.rvmenu.R;
@@ -45,7 +45,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
     public ItemsAdapter(Context c, LayoutInflater inflater,
                         DimensionProvider dimensionProvider,
                         final PosToTypeAdapter widgetsPosToTypeAdapter,
-                        final Binder<WidgetChildVh> widgetsBinder,
+                        final VhBinder<WidgetChildVh> widgetsBinder,
                         AsyncRvDelegate asyncViewRepository) {
         this.inflater = inflater;
         this.asyncViewRepository = asyncViewRepository;
@@ -53,13 +53,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
         FrameLayout inflateRoot = new FrameLayout(c);
         ViewProvider widgetRootProvider = new WidgetsRootProvider(inflater, inflateRoot);
         ViewProvider childrenProvider = new WidgetsChildProvider(inflater, inflateRoot);
-        AsyncRvHolderDelegate widgetsDelegate = new AsyncRvHolderDelegate(widgetRootProvider,
+        AsyncRvHolderDelegate widgetsDelegate = new AsyncRvHolderDelegate(
+                widgetRootProvider,
                 childrenProvider,
-                widgetsPosToTypeAdapter,
                 dimensionProvider,
                 widgetChildDimension,
-                widgetsBinder,
-                log);
+                widgetsBinder);
 
         asyncViewRepository.registerRvIdForType(TYPE_WIDGETS, R.id.widgetRv, widgetsDelegate,
                 new LazyProvider<ChildAdapter>() {

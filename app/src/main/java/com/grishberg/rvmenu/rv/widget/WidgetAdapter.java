@@ -2,18 +2,18 @@ package com.grishberg.rvmenu.rv.widget;
 
 import android.view.View;
 
-import com.grishberg.asynclayout.Binder;
 import com.grishberg.asynclayout.ChildAdapter;
 import com.grishberg.asynclayout.PosToTypeAdapter;
+import com.grishberg.asynclayout.VhBinder;
 import com.grishberg.rvmenu.common.L;
 
 public class WidgetAdapter extends ChildAdapter<WidgetChildVh> {
     private static final String T = "WA";
-    private final Binder<WidgetChildVh> binder;
+    private final VhBinder<WidgetChildVh> binder;
     private final L log;
 
     public WidgetAdapter(PosToTypeAdapter posToTypeAdapter,
-                         Binder<WidgetChildVh> binder, L l) {
+                         VhBinder<WidgetChildVh> binder, L l) {
         super(posToTypeAdapter);
         this.binder = binder;
         log = l;
