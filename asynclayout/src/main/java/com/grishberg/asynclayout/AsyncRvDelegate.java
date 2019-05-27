@@ -11,6 +11,7 @@ import android.view.View;
 public class AsyncRvDelegate {
     private final SparseArray<RvScopeContainer> rvScopeContainers = new SparseArray<>();
     private RvInitializer rvInitializer = RvInitializer.STUB;
+    private RootItemsPreparedListener parentItemsPreparedListener = RootItemsPreparedListener.STUB;
 
     /**
      * Register rv id-res for which child view will be created.
@@ -31,10 +32,17 @@ public class AsyncRvDelegate {
     }
 
     /**
-     * Sets listener for view prepared event.
+     * Sets listener for items RV child view prepared event.
      */
     public void setRvInitializer(RvInitializer rvInitializer) {
         this.rvInitializer = rvInitializer;
+    }
+
+    /**
+     * Sets listener for parent items view prepared event.
+     */
+    public void setParentItemsPreparedListener(RootItemsPreparedListener listener) {
+        this.parentItemsPreparedListener = listener;
     }
 
     /**
@@ -88,7 +96,7 @@ public class AsyncRvDelegate {
 
         @Override
         public void onRootItemPrepared(View v) {
-
+            parentItemsPreparedListener.onRootViewPrepared(v);
         }
 
         @Override
@@ -142,6 +150,24 @@ public class AsyncRvDelegate {
             public void onInitChildRecyclerView(int type, RecyclerView rv) {
                 /* stub */
             }
+        };
+    }
+
+    /**
+     * Listener for root item view created event.
+     */
+    public interface RootItemsPreparedListener {
+
+        /**
+         * Is called when root RV items view prepared.
+         *
+         * @param view prepared view.
+         */
+        void onRootViewPrepared(View view);
+
+        RootItemsPreparedListener STUB = new RootItemsPreparedListener() {
+            @Override
+            public void onRootViewPrepared(View view) {/* stub */}
         };
     }
 }

@@ -58,6 +58,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
                 childrenProvider,
                 dimensionProvider,
                 widgetChildDimension,
+                VhBinder.STUB,
                 widgetsBinder);
 
         asyncViewRepository.registerRvIdForType(TYPE_WIDGETS, R.id.widgetRv, widgetsDelegate,

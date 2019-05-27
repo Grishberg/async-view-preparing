@@ -7,6 +7,7 @@ public class AsyncRvHolderDelegate {
     private final ViewProvider childProvider;
     private final DimensionProvider parentDimensions;
     private final DimensionProvider childDimensions;
+    private final VhBinder parentBinder;
     private VhBinder childBinder;
     private PrepareTask parentPrepareTask;
     private PrepareTask childrenPrepareTask;
@@ -18,11 +19,13 @@ public class AsyncRvHolderDelegate {
             ViewProvider childProvider,
             DimensionProvider parentDimensions,
             DimensionProvider childDimensions,
+            VhBinder parentBinder,
             VhBinder childBinder) {
         this.parentProvider = parentProvider;
         this.childProvider = childProvider;
         this.parentDimensions = parentDimensions;
         this.childDimensions = childDimensions;
+        this.parentBinder = parentBinder;
         this.childBinder = childBinder;
     }
 
@@ -39,9 +42,9 @@ public class AsyncRvHolderDelegate {
         parentPrepareTask = new PrepareTask(
                 parentProvider,
                 parentDimensions,
-                VhBinder.STUB,
+                parentBinder,
                 new ParentPrepareListener(),
-                1, 0);
+                parentBinder.itemsCount(), 0);
         parentPrepareTask.execute();
     }
 
