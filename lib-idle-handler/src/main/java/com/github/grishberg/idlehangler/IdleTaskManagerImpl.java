@@ -8,40 +8,29 @@ import android.support.annotation.MainThread;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.*;
 
 @MainThread
 public class IdleTaskManagerImpl implements IdleTaskManager {
-    private ArrayList<IdleTask> tasks = new ArrayList<>();
+    private LinkedList<IdleTask> tasks = new LinkedList<>();
     private CustomIdleHandler idleHandler = new CustomIdleHandler();
-    private boolean subscribed;
     private MessageQueue messageQueue;
-    private Handler mainThreadHandler;
 
     public IdleTaskManagerImpl() {
         messageQueue = Looper.getMainLooper().getQueue();
-        mainThreadHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                execute();
-            }
-        };
     }
 
     @Override
     public void addTask(IdleTask task) {
-        tasks.add(task);
-        if (!subscribed) {
-            subscribe();
-            subscribed = true;
+        if (tasks.isEmpty()) {
+            messageQueue.addIdleHandler(idleHandler);
         }
-        if (messageQueue.isIdle()) {
-            mainThreadHandler.sendEmptyMessage(0);
-        }
+		tasks.offer(task);
     }
-
-    private void subscribe() {
-        messageQueue.addIdleHandler(idleHandler);
-    }
+	
+	public void removeTask(IdleTask task){
+		tasks.remove(task);
+	}
 
     private void execute() {
         if (tasks.isEmpty()) {
