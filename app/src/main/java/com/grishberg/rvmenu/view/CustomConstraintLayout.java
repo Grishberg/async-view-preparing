@@ -5,10 +5,11 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import com.github.grishberg.consoleview.LoggerImpl;
 import com.grishberg.rvmenu.common.L;
 
 public class CustomConstraintLayout extends LinearLayout {
-    private L log = new L();
+    private L log = new L(new LoggerImpl());
 
     public CustomConstraintLayout(Context c) {
         this(c, null);

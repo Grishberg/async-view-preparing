@@ -1,36 +1,36 @@
 package com.grishberg.rvmenu.common;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Pair;
-
 import com.github.grishberg.consoleview.Logger;
-import com.github.grishberg.consoleview.LoggerImpl;
+import com.github.grishberg.idlehangler.IdleTask;
+import com.github.grishberg.idlehangler.IdleTaskManager;
+import com.github.grishberg.idlehangler.IdleTaskManagerImpl;
 
 public class L {
     private final Logger log;
-    private final Handler handler;
+    private final IdleTaskManager idleTaskManager;
 
-    public L() {
-        log = new LoggerImpl();
-        handler = new LogHandler(Looper.getMainLooper());
+    public L(Logger l) {
+        log = l;
+        idleTaskManager = new IdleTaskManagerImpl();
     }
 
     public void d(String t, String m) {
-        //Message msg = handler.obtainMessage(0, new Pair<>(t, m));
-        //handler.sendMessage(msg);
+        // TODO create pool.
+        idleTaskManager.addTask(new LogTask(t, m));
     }
 
-    private class LogHandler extends Handler {
-        LogHandler(Looper looper) {
-            super(looper);
+    private class LogTask implements IdleTask {
+        String tag;
+        String message;
+
+        LogTask(String tag, String message) {
+            this.tag = tag;
+            this.message = message;
         }
 
         @Override
-        public void dispatchMessage(Message msg) {
-            Pair<String, String> m = (Pair<String, String>) msg.obj;
-            log.d(m.first, m.second);
+        public void run() {
+            log.d(tag, message);
         }
     }
 }

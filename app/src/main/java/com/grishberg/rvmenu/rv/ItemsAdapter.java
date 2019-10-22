@@ -36,19 +36,21 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
     private static final int TYPE_WIDGETS = 0;
     private static final int TYPE_ITEMS = 1;
 
-    private final L log = new L();
     private final ArrayList<Item> items = new ArrayList<>();
     private final LayoutInflater inflater;
     private boolean initiated;
     private final AsyncRvDelegate asyncViewRepository;
+    private final L log;
 
     public ItemsAdapter(Context c, LayoutInflater inflater,
                         DimensionProvider dimensionProvider,
                         final PosToTypeAdapter widgetsPosToTypeAdapter,
                         final VhBinder<WidgetChildVh> widgetsBinder,
-                        AsyncRvDelegate asyncViewRepository) {
+                        AsyncRvDelegate asyncViewRepository,
+                        final L log) {
         this.inflater = inflater;
         this.asyncViewRepository = asyncViewRepository;
+        this.log = log;
         DimensionProvider widgetChildDimension = new WidgetChildDimension(c);
         FrameLayout inflateRoot = new FrameLayout(c);
         ViewProvider widgetRootProvider = new WidgetsRootProvider(inflater, inflateRoot);

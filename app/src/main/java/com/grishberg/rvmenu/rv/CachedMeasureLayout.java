@@ -5,13 +5,14 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import com.github.grishberg.consoleview.LoggerImpl;
 import com.grishberg.rvmenu.common.L;
 
 /**
  * View group with cached dimensions.
  */
 public class CachedMeasureLayout extends FrameLayout {
-    private L log = new L();
+    private L log = new L(new LoggerImpl());
 
     public CachedMeasureLayout(Context c) {
         this(c, null);

@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.Toast;
 
-import com.github.grishberg.consoleview.Logger;
 import com.github.grishberg.consoleview.LoggerImpl;
 import com.grishberg.asynclayout.AsyncRvDelegate;
 import com.grishberg.asynclayout.VhBinder;
+import com.grishberg.rvmenu.common.L;
 import com.grishberg.rvmenu.menu.BarVisibilityListener;
 import com.grishberg.rvmenu.menu.MenuVisibility;
 import com.grishberg.rvmenu.rv.ItemsAdapter;
@@ -33,7 +33,7 @@ import java.util.List;
 public class MainActivity extends Activity {
     private Rect touchHitRect = new Rect();
     private View bar;
-    private Logger log;
+    private L log;
     private ItemsAdapter adapter;
     private ItemsRecyclerView rv;
     private WidgetDimensions widgetDimensions;
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        log = new LoggerImpl();
+        log = new L(new LoggerImpl());
         ViewGroup container = findViewById(R.id.container);
         rv = new ItemsRecyclerView(this);
         rv.setLayoutParams(new ViewGroup.LayoutParams(
@@ -62,7 +62,8 @@ public class MainActivity extends Activity {
                 widgetDimensions,
                 new WidgetPosToTypeAdapter(),
                 binder,
-                asyncRvDelegate);
+                asyncRvDelegate,
+                log);
         rv.addItemDecoration(new DividerItemDecoration(this, RecyclerView.VERTICAL));
         rv.setAdapter(adapter);
         adapter.populate(createData());

@@ -26,6 +26,7 @@ class PrepareTask extends AsyncTask<Void, Pair<Integer, View>, Void> {
         this.startPos = startPos;
     }
 
+    @SuppressWarnings("WrongThread")
     @Override
     protected Void doInBackground(Void[] p1) {
         for (int i = startPos; i < count; i++) {

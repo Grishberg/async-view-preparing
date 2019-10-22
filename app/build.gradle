@@ -19,11 +19,13 @@ android {
 }
 
 dependencies {
-    //implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.android.support.constraint:constraint-layout:1.1.3'
-    compile 'com.android.support:recyclerview-v7:27.1.1'
-    compile 'com.github.grishberg:debugconsole:1.0.1'
-    compile 'com.android.support:cardview-v7:27.1.1'
-    compile project(':asynclayout')
+    def supportVer = "27.1.1"
+    implementation "com.android.support:design:$supportVer"
+    implementation "com.android.support:appcompat-v7:$supportVer"
+    implementation "com.android.support.constraint:constraint-layout:1.1.3"
+    implementation "com.android.support:recyclerview-v7:$supportVer"
+    implementation "com.github.grishberg:debugconsole:1.0.1"
+    implementation "com.android.support:cardview-v7:$supportVer"
+    implementation project(':asynclayout')
+    implementation project(':lib-idle-handler')
 }
