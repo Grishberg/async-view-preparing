@@ -30,7 +30,7 @@ import com.grishberg.rvmenu.rv.widget.WidgetPosToTypeAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements LoggerProvider {
     private Rect touchHitRect = new Rect();
     private View bar;
     private L log;
@@ -157,4 +157,9 @@ public class MainActivity extends Activity {
             rv.setAlpha(alpha);
         }
     }
+
+	@Override
+	public L getLogger() {
+		return log;
+	}
 }

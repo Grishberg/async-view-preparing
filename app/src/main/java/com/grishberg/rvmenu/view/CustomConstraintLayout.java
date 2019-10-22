@@ -7,9 +7,10 @@ import android.widget.LinearLayout;
 
 import com.github.grishberg.consoleview.LoggerImpl;
 import com.grishberg.rvmenu.common.L;
+import com.grishberg.rvmenu.*;
 
 public class CustomConstraintLayout extends LinearLayout {
-    private L log = new L(new LoggerImpl());
+    private L log;
 
     public CustomConstraintLayout(Context c) {
         this(c, null);
@@ -21,6 +22,9 @@ public class CustomConstraintLayout extends LinearLayout {
 
     public CustomConstraintLayout(Context c, AttributeSet a, int s) {
         super(c, a, s);
+		if(c instanceof LoggerProvider){
+			log = ((LoggerProvider) c).getLogger();
+		}
     }
 
     @Override

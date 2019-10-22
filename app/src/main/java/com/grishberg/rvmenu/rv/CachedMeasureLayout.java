@@ -7,12 +7,13 @@ import android.widget.FrameLayout;
 
 import com.github.grishberg.consoleview.LoggerImpl;
 import com.grishberg.rvmenu.common.L;
+import com.grishberg.rvmenu.*;
 
 /**
  * View group with cached dimensions.
  */
 public class CachedMeasureLayout extends FrameLayout {
-    private L log = new L(new LoggerImpl());
+    private L log;
 
     public CachedMeasureLayout(Context c) {
         this(c, null);
@@ -20,6 +21,9 @@ public class CachedMeasureLayout extends FrameLayout {
 
     public CachedMeasureLayout(Context c, AttributeSet a) {
         this(c, a, 0);
+		if(c instanceof LoggerProvider){
+			log = ((LoggerProvider) c).getLogger();
+		}
     }
 
     public CachedMeasureLayout(Context c, AttributeSet a, int s) {
