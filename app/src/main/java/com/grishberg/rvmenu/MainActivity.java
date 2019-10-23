@@ -1,6 +1,7 @@
 package com.grishberg.rvmenu;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -17,10 +18,16 @@ import com.github.grishberg.consoleview.LoggerImpl;
 import com.grishberg.asynclayout.AsyncRvDelegate;
 import com.grishberg.asynclayout.VhBinder;
 import com.grishberg.rvmenu.common.L;
+import com.grishberg.rvmenu.common.UiUtils;
 import com.grishberg.rvmenu.menu.BarVisibilityListener;
 import com.grishberg.rvmenu.menu.MenuVisibility;
 import com.grishberg.rvmenu.rv.ItemsAdapter;
 import com.grishberg.rvmenu.rv.ItemsRecyclerView;
+import com.grishberg.rvmenu.rv.gallery.GalleryChildBinder;
+import com.grishberg.rvmenu.rv.gallery.GalleryChildViewHolder;
+import com.grishberg.rvmenu.rv.gallery.GalleryDimensions;
+import com.grishberg.rvmenu.rv.gallery.GalleryItem;
+import com.grishberg.rvmenu.rv.gallery.GalleryPosToTypeAdapter;
 import com.grishberg.rvmenu.rv.widget.WidgetChildBinder;
 import com.grishberg.rvmenu.rv.widget.WidgetChildVh;
 import com.grishberg.rvmenu.rv.widget.WidgetDimensions;
@@ -29,8 +36,6 @@ import com.grishberg.rvmenu.rv.widget.WidgetPosToTypeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.grishberg.rvmenu.rv.gallery.*;
-import android.graphics.*;
 
 public class MainActivity extends Activity implements LoggerProvider {
     private Rect touchHitRect = new Rect();
@@ -40,12 +45,15 @@ public class MainActivity extends Activity implements LoggerProvider {
     private ItemsRecyclerView rv;
     private WidgetDimensions widgetDimensions;
     private AsyncRvDelegate asyncRvDelegate;
+    private UiUtils uiUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         log = new L(new LoggerImpl());
+        uiUtils = new UiUtils(this);
+
         ViewGroup container = findViewById(R.id.container);
         rv = new ItemsRecyclerView(this);
         rv.setLayoutParams(new ViewGroup.LayoutParams(
@@ -53,20 +61,20 @@ public class MainActivity extends Activity implements LoggerProvider {
         container.addView(rv, 0);
 
         widgetDimensions = new WidgetDimensions(this);
-		GalleryDimensions galleryDimensions = new GalleryDimensions(this);
+        GalleryDimensions galleryDimensions = new GalleryDimensions(this);
         rv.setDimensionProvider(widgetDimensions);
         VhBinder<WidgetChildVh> binder = new WidgetChildBinder(createWidgetData());
-		VhBinder<GalleryChildViewHolder> galleryBinder = new GalleryChildBinder(createGalleryData());
+        VhBinder<GalleryChildViewHolder> galleryBinder = new GalleryChildBinder(createGalleryData());
         asyncRvDelegate = new AsyncRvDelegate();
 
         adapter = new ItemsAdapter(this,
                 LayoutInflater.from(this),
                 widgetDimensions,
-				galleryDimensions,
+                galleryDimensions,
                 new WidgetPosToTypeAdapter(),
-				new GalleryPosToTypeAdapter(),
+                new GalleryPosToTypeAdapter(),
                 binder,
-				galleryBinder,
+                galleryBinder,
                 asyncRvDelegate,
                 log);
         rv.addItemDecoration(new DividerItemDecoration(this, RecyclerView.VERTICAL));
@@ -103,7 +111,15 @@ public class MainActivity extends Activity implements LoggerProvider {
     private List<Item> createData() {
         ArrayList<Item> res = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            res.add(new Item("Menu item " + i));
+            int h;
+            if (i == 0) {
+                h = uiUtils.dpToPix(150);
+            } else if (i == 1) {
+                h = uiUtils.dpToPix(200);
+            } else {
+                h = uiUtils.dpToPix(80);
+            }
+            res.add(new Item("Menu item " + i, h));
         }
         return res;
     }
@@ -118,15 +134,15 @@ public class MainActivity extends Activity implements LoggerProvider {
                 "I can help you with some problems with running espresso tests.", R.drawable.ic_widget3));
         return items;
     }
-	
-	private List<GalleryItem> createGalleryData() {
-		ArrayList<GalleryItem> items = new ArrayList<>();
-		for(int i = 0; i< 10; i++) {
-			int color = i % 2== 0 ? Color.GRAY : Color.BLUE;
-       		items.add(new GalleryItem("Widget item " + i, color));
-		}
+
+    private List<GalleryItem> createGalleryData() {
+        ArrayList<GalleryItem> items = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            int color = i % 2 == 0 ? Color.GRAY : Color.BLUE;
+            items.add(new GalleryItem("Widget item " + i, color));
+        }
         return items;
-	}
+    }
 
     @Override
     protected void onDestroy() {
@@ -171,8 +187,8 @@ public class MainActivity extends Activity implements LoggerProvider {
         }
     }
 
-	@Override
-	public L getLogger() {
-		return log;
-	}
+    @Override
+    public L getLogger() {
+        return log;
+    }
 }

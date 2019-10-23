@@ -20,6 +20,12 @@ import com.grishberg.rvmenu.Item;
 import com.grishberg.rvmenu.R;
 import com.grishberg.rvmenu.common.L;
 import com.grishberg.rvmenu.common.LazyProvider;
+import com.grishberg.rvmenu.rv.gallery.GalleryAdapter;
+import com.grishberg.rvmenu.rv.gallery.GalleryChildViewHolder;
+import com.grishberg.rvmenu.rv.gallery.GalleryChildViewProvider;
+import com.grishberg.rvmenu.rv.gallery.GalleryDimensions;
+import com.grishberg.rvmenu.rv.gallery.GalleryRootViewProvider;
+import com.grishberg.rvmenu.rv.gallery.GalleryViewHolder;
 import com.grishberg.rvmenu.rv.widget.WidgetAdapter;
 import com.grishberg.rvmenu.rv.widget.WidgetChildDimension;
 import com.grishberg.rvmenu.rv.widget.WidgetChildVh;
@@ -29,15 +35,13 @@ import com.grishberg.rvmenu.rv.widget.WidgetsRootProvider;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.grishberg.rvmenu.rv.gallery.*;
 
 public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
     private static final String T = "[adapter]";
 
     private static final int TYPE_WIDGETS = 0;
     private static final int TYPE_GALLERY = 1;
-	private static final int TYPE_ITEMS = 2;
-	
+    private static final int TYPE_ITEMS = 2;
 
     private final ArrayList<Item> items = new ArrayList<>();
     private final LayoutInflater inflater;
@@ -46,40 +50,40 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
     private final L log;
 
     public ItemsAdapter(Context c, LayoutInflater inflater,
-                        DimensionProvider dimensionProvider,
-						DimensionProvider galleryDimensuonProvider,
+                        DimensionProvider widgetChildDimenProvider,
+                        DimensionProvider galleryChildDimenProvider,
                         final PosToTypeAdapter widgetsPosToTypeAdapter,
-						final PosToTypeAdapter galleryPosToTypeAdapter,
+                        final PosToTypeAdapter galleryPosToTypeAdapter,
                         final VhBinder<WidgetChildVh> widgetsBinder,
-						final VhBinder<GalleryChildViewHolder> galleryBinder,
+                        final VhBinder<GalleryChildViewHolder> galleryBinder,
                         AsyncRvDelegate asyncViewRepository,
                         final L log) {
         this.inflater = inflater;
         this.asyncViewRepository = asyncViewRepository;
         this.log = log;
         DimensionProvider widgetChildDimension = new WidgetChildDimension(c);
-		DimensionProvider galleryChildDimension = new GalleryDimensions(c);
+        DimensionProvider galleryChildDimension = new GalleryDimensions(c);
         FrameLayout inflateRoot = new FrameLayout(c);
         ViewProvider widgetRootProvider = new WidgetsRootProvider(inflater, inflateRoot);
         ViewProvider childrenProvider = new WidgetsChildProvider(inflater, inflateRoot);
-		
-		ViewProvider galleryRootProvider = new GalleryRootViewProvider(inflater, inflateRoot);
+
+        ViewProvider galleryRootProvider = new GalleryRootViewProvider(inflater, inflateRoot);
         ViewProvider galleryChildProvider = new GalleryChildViewProvider(inflater, inflateRoot);
-        
+
         AsyncRvHolderDelegate widgetsDelegate = new AsyncRvHolderDelegate(
                 widgetRootProvider,
                 childrenProvider,
-                dimensionProvider,
+                widgetChildDimenProvider,
                 widgetChildDimension,
                 VhBinder.STUB,
                 widgetsBinder);
-		AsyncRvHolderDelegate galleryDelegate = new AsyncRvHolderDelegate(
-			galleryRootProvider,
-			galleryChildProvider,
-			galleryDimensuonProvider,
-			galleryChildDimension,
-			VhBinder.STUB,
-			galleryBinder);
+        AsyncRvHolderDelegate galleryDelegate = new AsyncRvHolderDelegate(
+                galleryRootProvider,
+                galleryChildProvider,
+                galleryChildDimenProvider,
+                galleryChildDimension,
+                VhBinder.STUB,
+                galleryBinder);
 
         asyncViewRepository.registerRvIdForType(TYPE_WIDGETS, R.id.widgetRv, widgetsDelegate,
                 new LazyProvider<ChildAdapter>() {
@@ -89,16 +93,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
                     }
                 },
                 false);
-				
-		asyncViewRepository.registerRvIdForType(TYPE_GALLERY, R.id.galleryRv, galleryDelegate,
-			new LazyProvider<ChildAdapter>() {
-				@Override
-				protected ChildAdapter create() {
-					return new GalleryAdapter(galleryPosToTypeAdapter, galleryBinder, log);
-				}
-			},
-			true);
-			
+
+        asyncViewRepository.registerRvIdForType(TYPE_GALLERY, R.id.galleryRv, galleryDelegate,
+                new LazyProvider<ChildAdapter>() {
+                    @Override
+                    protected ChildAdapter create() {
+                        return new GalleryAdapter(galleryPosToTypeAdapter, galleryBinder, log);
+                    }
+                },
+                true);
+
         asyncViewRepository.setRvInitializer(new AsyncRvDelegate.RvInitializer() {
             @Override
             public void onInitChildRecyclerView(int type, RecyclerView rv) {
@@ -106,11 +110,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
                     rv.setLayoutManager(new LinearLayoutManager(rv.getContext(), RecyclerView.HORIZONTAL, false));
                     DividerItemDecoration itemDecoration = new DividerItemDecoration(rv.getContext(), RecyclerView.HORIZONTAL);
                     rv.addItemDecoration(itemDecoration);
-                } else if(type == TYPE_GALLERY) {
-					rv.setLayoutManager(new LinearLayoutManager(rv.getContext(), RecyclerView.HORIZONTAL, false));
+                } else if (type == TYPE_GALLERY) {
+                    rv.setLayoutManager(new LinearLayoutManager(rv.getContext(), RecyclerView.HORIZONTAL, false));
                     DividerItemDecoration itemDecoration = new DividerItemDecoration(rv.getContext(), RecyclerView.HORIZONTAL);
                     rv.addItemDecoration(itemDecoration);
-				}
+                }
             }
         });
     }
@@ -137,10 +141,20 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
         if (position == 0) {
             return TYPE_WIDGETS;
         }
-		if(position == 1) {
-			return TYPE_GALLERY;
-		}
+        if (position == 1) {
+            return TYPE_GALLERY;
+        }
         return TYPE_ITEMS;
+    }
+
+    private int getHeightByViewType(int type) {
+        if (type == TYPE_WIDGETS) {
+            return items.get(0).height;
+        }
+        if (type == TYPE_GALLERY) {
+            return items.get(1).height;
+        }
+        return items.get(2).height;
     }
 
     public void showWidget() {
@@ -158,11 +172,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
         MenuViewHolder vh;
         if (type == TYPE_WIDGETS) {
             vh = createWidgetVH(parent);
-        } else if(type == TYPE_GALLERY){
-			vh = createGalleryVH(parent);
-		} else {
+        } else if (type == TYPE_GALLERY) {
+            vh = createGalleryVH(parent);
+        } else {
             vh = createItemVh(parent);
         }
+        ViewGroup.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                getHeightByViewType(type));
+        vh.itemView.setLayoutParams(lp);
         asyncViewRepository.onCreateViewHolder(type, vh.itemView);
         return vh;
     }
@@ -172,14 +189,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
         return new WidgetViewHolder(inflater.inflate(R.layout.widget_layout, parent, false), log);
     }
 
-	private MenuViewHolder createGalleryVH(ViewGroup parent) {
+    private MenuViewHolder createGalleryVH(ViewGroup parent) {
         log.d(T, "create gallery vh");
-		
+
         return new GalleryViewHolder(inflater.inflate(R.layout.gallery_layout, parent, false), log);
     }
-	
+
     private MenuViewHolder createItemVh(ViewGroup parent) {
-        return new ItemViewHolder(inflater.inflate(R.layout.item_layout, parent, false));
+        return new ItemVh(inflater.inflate(R.layout.item_layout, parent, false));
     }
 
     @Override

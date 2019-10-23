@@ -1,13 +1,11 @@
 package com.grishberg.rvmenu;
 
 public class Item {
-    private final String title;
+    public final String title;
+    public final int height;
 
-    public Item(String title) {
+    public Item(String title, int height) {
         this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
+        this.height = height;
     }
 }
