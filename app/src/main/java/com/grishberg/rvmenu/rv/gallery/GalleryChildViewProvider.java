@@ -1,6 +1,8 @@
 package com.grishberg.rvmenu.rv.gallery;
 import android.view.*;
-import com.grishberg.asynclayout.*;
+
+import com.grishberg.asynclayout.ViewProvider;
+import com.grishberg.rvmenu.R;
 
 public class GalleryChildViewProvider implements ViewProvider {
     private final LayoutInflater inflater;

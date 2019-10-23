@@ -10,11 +10,12 @@ import java.util.LinkedList;
 public class IdleTaskManagerImpl implements IdleTaskManager {
     private LinkedList<IdleTask> tasks = new LinkedList<>();
     private CustomIdleHandler idleHandler = new CustomIdleHandler();
+    private MessageQueue messageQueue = Looper.getMainLooper().getQueue();
 
     @Override
     public void addTask(IdleTask task) {
         if (tasks.isEmpty()) {
-            Looper.myQueue().addIdleHandler(idleHandler);
+            messageQueue.addIdleHandler(idleHandler);
         }
         tasks.offer(task);
     }
