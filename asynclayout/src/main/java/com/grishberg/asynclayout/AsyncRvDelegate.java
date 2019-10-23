@@ -77,7 +77,7 @@ public class AsyncRvDelegate {
      */
     public void prepareAsync(int type) {
         RvScopeContainer scope = rvScopeContainers.get(type);
-        if (scope == null || scope.initOnViewCreated) {
+        if (scope == null /*|| scope.initOnViewCreated*/) {
             return;
         }
         scope.rvHolderDelegate.prepareChildren();

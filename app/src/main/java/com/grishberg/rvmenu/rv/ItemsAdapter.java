@@ -29,12 +29,15 @@ import com.grishberg.rvmenu.rv.widget.WidgetsRootProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.grishberg.rvmenu.rv.gallery.*;
 
 public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
     private static final String T = "[adapter]";
 
     private static final int TYPE_WIDGETS = 0;
-    private static final int TYPE_ITEMS = 1;
+    private static final int TYPE_GALLERY = 1;
+	private static final int TYPE_ITEMS = 2;
+	
 
     private final ArrayList<Item> items = new ArrayList<>();
     private final LayoutInflater inflater;
@@ -44,17 +47,25 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
 
     public ItemsAdapter(Context c, LayoutInflater inflater,
                         DimensionProvider dimensionProvider,
+						DimensionProvider galleryDimensuonProvider,
                         final PosToTypeAdapter widgetsPosToTypeAdapter,
+						final PosToTypeAdapter galleryPosToTypeAdapter,
                         final VhBinder<WidgetChildVh> widgetsBinder,
+						final VhBinder<GalleryChildViewHolder> galleryBinder,
                         AsyncRvDelegate asyncViewRepository,
                         final L log) {
         this.inflater = inflater;
         this.asyncViewRepository = asyncViewRepository;
         this.log = log;
         DimensionProvider widgetChildDimension = new WidgetChildDimension(c);
+		DimensionProvider galleryChildDimension = new GalleryDimensions(c);
         FrameLayout inflateRoot = new FrameLayout(c);
         ViewProvider widgetRootProvider = new WidgetsRootProvider(inflater, inflateRoot);
         ViewProvider childrenProvider = new WidgetsChildProvider(inflater, inflateRoot);
+		
+		ViewProvider galleryRootProvider = new GalleryRootViewProvider(inflater, inflateRoot);
+        ViewProvider galleryChildProvider = new GalleryChildViewProvider(inflater, inflateRoot);
+        
         AsyncRvHolderDelegate widgetsDelegate = new AsyncRvHolderDelegate(
                 widgetRootProvider,
                 childrenProvider,
@@ -62,6 +73,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
                 widgetChildDimension,
                 VhBinder.STUB,
                 widgetsBinder);
+		AsyncRvHolderDelegate galleryDelegate = new AsyncRvHolderDelegate(
+			galleryRootProvider,
+			galleryChildProvider,
+			galleryDimensuonProvider,
+			galleryChildDimension,
+			VhBinder.STUB,
+			galleryBinder);
 
         asyncViewRepository.registerRvIdForType(TYPE_WIDGETS, R.id.widgetRv, widgetsDelegate,
                 new LazyProvider<ChildAdapter>() {
@@ -71,6 +89,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
                     }
                 },
                 false);
+				
+		asyncViewRepository.registerRvIdForType(TYPE_GALLERY, R.id.galleryRv, galleryDelegate,
+			new LazyProvider<ChildAdapter>() {
+				@Override
+				protected ChildAdapter create() {
+					return new GalleryAdapter(galleryPosToTypeAdapter, galleryBinder, log);
+				}
+			},
+			true);
+			
         asyncViewRepository.setRvInitializer(new AsyncRvDelegate.RvInitializer() {
             @Override
             public void onInitChildRecyclerView(int type, RecyclerView rv) {
@@ -78,7 +106,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
                     rv.setLayoutManager(new LinearLayoutManager(rv.getContext(), RecyclerView.HORIZONTAL, false));
                     DividerItemDecoration itemDecoration = new DividerItemDecoration(rv.getContext(), RecyclerView.HORIZONTAL);
                     rv.addItemDecoration(itemDecoration);
-                }
+                } else if(type == TYPE_GALLERY) {
+					rv.setLayoutManager(new LinearLayoutManager(rv.getContext(), RecyclerView.HORIZONTAL, false));
+                    DividerItemDecoration itemDecoration = new DividerItemDecoration(rv.getContext(), RecyclerView.HORIZONTAL);
+                    rv.addItemDecoration(itemDecoration);
+				}
             }
         });
     }
@@ -105,6 +137,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
         if (position == 0) {
             return TYPE_WIDGETS;
         }
+		if(position == 1) {
+			return TYPE_GALLERY;
+		}
         return TYPE_ITEMS;
     }
 
@@ -123,7 +158,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
         MenuViewHolder vh;
         if (type == TYPE_WIDGETS) {
             vh = createWidgetVH(parent);
-        } else {
+        } else if(type == TYPE_GALLERY){
+			vh = createGalleryVH(parent);
+		} else {
             vh = createItemVh(parent);
         }
         asyncViewRepository.onCreateViewHolder(type, vh.itemView);
@@ -135,6 +172,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<MenuViewHolder> {
         return new WidgetViewHolder(inflater.inflate(R.layout.widget_layout, parent, false), log);
     }
 
+	private MenuViewHolder createGalleryVH(ViewGroup parent) {
+        log.d(T, "create gallery vh");
+		
+        return new GalleryViewHolder(inflater.inflate(R.layout.gallery_layout, parent, false), log);
+    }
+	
     private MenuViewHolder createItemVh(ViewGroup parent) {
         return new ItemViewHolder(inflater.inflate(R.layout.item_layout, parent, false));
     }

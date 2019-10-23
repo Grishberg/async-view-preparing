@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Pair;
 import android.view.View;
 import android.view.View.MeasureSpec;
+import android.util.*;
 
 class PrepareTask extends AsyncTask<Void, Pair<Integer, View>, Void> {
     private final ViewProvider provider;
@@ -29,6 +30,7 @@ class PrepareTask extends AsyncTask<Void, Pair<Integer, View>, Void> {
     @SuppressWarnings("WrongThread")
     @Override
     protected Void doInBackground(Void[] p1) {
+		Log.d("PrapareTask", "prepare "+provider);
         for (int i = startPos; i < count; i++) {
             View v = provider.getView(0);
             binder.bind(i, v);

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="150dp"
+	android:background="#00ff00"
+	android:gravity="center"
+>
+
+	<!-- A RecyclerView with some commonly used attributes -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/galleryRv"
+        android:scrollbars="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+		android:visibility="visible"/>
+
+
+</FrameLayout>
+

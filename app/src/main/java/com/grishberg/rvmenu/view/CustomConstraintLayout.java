@@ -37,6 +37,11 @@ public class CustomConstraintLayout extends LinearLayout {
             return;
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		try
+		{
+			Thread.sleep(800);
+		} catch (InterruptedException e)
+		{}
         long d = SystemClock.uptimeMillis() - s;
         log.d("CML", "on measure d=" + d + ", t=" + Thread.currentThread());
     }

@@ -7,4 +7,8 @@
 	<dimen name="childWidth">300dp</dimen>
 	<dimen name="childHeight">150dp</dimen>
 	
+	<dimen name="galleryHeight">200dp</dimen>
+	<dimen name="galleryChildWidth">350dp</dimen>
+	<dimen name="galleryChildHeight">200dp</dimen>
+	
 </resources>

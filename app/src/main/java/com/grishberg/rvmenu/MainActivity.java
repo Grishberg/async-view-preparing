@@ -29,6 +29,8 @@ import com.grishberg.rvmenu.rv.widget.WidgetPosToTypeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.grishberg.rvmenu.rv.gallery.*;
+import android.graphics.*;
 
 public class MainActivity extends Activity implements LoggerProvider {
     private Rect touchHitRect = new Rect();
@@ -51,17 +53,20 @@ public class MainActivity extends Activity implements LoggerProvider {
         container.addView(rv, 0);
 
         widgetDimensions = new WidgetDimensions(this);
-
+		GalleryDimensions galleryDimensions = new GalleryDimensions(this);
         rv.setDimensionProvider(widgetDimensions);
         VhBinder<WidgetChildVh> binder = new WidgetChildBinder(createWidgetData());
-
+		VhBinder<GalleryChildViewHolder> galleryBinder = new GalleryChildBinder(createGalleryData());
         asyncRvDelegate = new AsyncRvDelegate();
 
         adapter = new ItemsAdapter(this,
                 LayoutInflater.from(this),
                 widgetDimensions,
+				galleryDimensions,
                 new WidgetPosToTypeAdapter(),
+				new GalleryPosToTypeAdapter(),
                 binder,
+				galleryBinder,
                 asyncRvDelegate,
                 log);
         rv.addItemDecoration(new DividerItemDecoration(this, RecyclerView.VERTICAL));
@@ -111,9 +116,17 @@ public class MainActivity extends Activity implements LoggerProvider {
                 "I am on mobius, it's very interrsting meetup 2", R.drawable.ic_widget2));
         items.add(new WidgetIem("Widget item 3",
                 "I can help you with some problems with running espresso tests.", R.drawable.ic_widget3));
-
         return items;
     }
+	
+	private List<GalleryItem> createGalleryData() {
+		ArrayList<GalleryItem> items = new ArrayList<>();
+		for(int i = 0; i< 10; i++) {
+			int color = i % 2== 0 ? Color.GRAY : Color.BLUE;
+       		items.add(new GalleryItem("Widget item " + i, color));
+		}
+        return items;
+	}
 
     @Override
     protected void onDestroy() {
